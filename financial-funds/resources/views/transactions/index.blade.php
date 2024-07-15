@@ -43,10 +43,10 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ ucfirst($transaction->type) }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $transaction->stock ? 'Stock' : 'Fund' }}
+                                            {{ $transaction->stock ? 'Stock' : ($transaction->fund ? 'Fund' : 'N/A') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $transaction->stock->name ?? $transaction->fund->name }}
+                                            {{ $transaction->stock->name ?? ($transaction->fund->name ?? 'N/A') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $transaction->quantity }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $transaction->created_at->format('Y-m-d H:i:s') }}</td>

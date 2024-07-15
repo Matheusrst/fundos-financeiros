@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Rotas para transações
     Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
+    Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transactions.store');
     Route::post('/transactions/buy', [TransactionController::class, 'buy'])->name('transactions.buy');
     Route::post('/transactions/sell', [TransactionController::class, 'sell'])->name('transactions.sell');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

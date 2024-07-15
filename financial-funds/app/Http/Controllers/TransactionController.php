@@ -17,11 +17,47 @@ class TransactionController extends Controller
     }
 
     public function create()
-    {
-        $stocks = Stock::all();
-        $funds = Fund::all();
-        return view('transactions.create', compact('stocks', 'funds'));
+{
+    $stocks = Stock::all();
+    $funds = Fund::all();
+
+    return view('transactions.create', compact('stocks', 'funds'));
+}
+
+    public function store(Request $request)
+{
+    $validated = $request->validate([
+        'type' => 'required|in:buy,sell',
+        'asset_type' => 'required|in:stock,fund',
+        'asset_id' => 'required|integer',
+        'quantity' => 'required|integer|min:1',
+    ]);
+
+    if ($validated['asset_type'] === 'stock') {
+        $asset = Stock::find($validated['asset_id']);
+    } else {
+        $asset = Fund::find($validated['asset_id']);
     }
+
+    if (!$asset) {
+        return redirect()->back()->withErrors(['asset_id' => 'Invalid asset selected.']);
+    }
+
+    $transaction = new Transaction();
+    $transaction->type = $validated['type'];
+    $transaction->quantity = $validated['quantity'];
+    $transaction->user_id = auth()->id();
+
+    if ($validated['asset_type'] === 'stock') {
+        $transaction->stock_id = $asset->id;
+    } else {
+        $transaction->fund_id = $asset->id;
+    }
+
+    $transaction->save();
+
+    return redirect()->route('transactions.index')->with('success', 'Transaction completed successfully.');
+}
 
     public function buy(Request $request)
     {
@@ -76,7 +112,7 @@ class TransactionController extends Controller
     {
         $request->validate([
             'stock_id' => 'nullable|exists:stocks,id',
-            'fund_id' => 'nullable|exist:funds,id',
+            'fund_id' => 'nullable|exists:funds,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
@@ -88,7 +124,7 @@ class TransactionController extends Controller
         if ($stock) {
             $transactionCount = Transaction::where('user_id', $userId)
             ->where('stock_id', $stock->id)
-            ->where('transaction_type', 'buy')
+            ->where('type', 'buy')
             ->sum('quantity');
 
             if ($transactionCount < $quantity) {
@@ -102,14 +138,14 @@ class TransactionController extends Controller
                 'user_id' => $userId,
                 'stock_id' => $stock->id,
                 'quantity' => $quantity,
-                'transaction_type' => 'sell',
+                'type' => 'sell',
             ]);
         }
 
         if ($fund) {
             $transactionCount = Transaction::where('user_id', $userId)
             ->where('fund_id', $fund->id)
-            ->where('transaction_type', 'buy')
+            ->where('type', 'buy')
             ->sum('quantity');
 
             if ($transactionCount < $quantity) {
@@ -123,7 +159,7 @@ class TransactionController extends Controller
                 'user_id' => $userId,
                 'fund' => $fund->id,
                 'quantity' => $quantity,
-                'transaction_type' => 'sell',
+                'type' => 'sell',
             ]);
         }
 
