@@ -5,7 +5,7 @@ use App\http\Controllers\FundController;
 use App\http\Controllers\StockController;
 use App\http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\WalletController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,4 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/transactions/buy', [TransactionController::class, 'buy'])->name('transactions.buy');
     Route::post('/transactions/sell', [TransactionController::class, 'sell'])->name('transactions.sell');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+
+    //rotas da carteira
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
 });
