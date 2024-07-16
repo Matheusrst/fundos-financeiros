@@ -1,7 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Funds List') }}
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <th>|</th>
+            <a href="{{ route('stocks.index') }}">Stocks</a>
+            <th>|</th>
+            <a href="{{ route('funds.index') }}">Funds</a>
+            <th>|</th>
+            <a href="{{ route('transactions.index') }}">Transaction History</a>
+            <th>|</th>
+            <a href="{{ route('transactions.create') }}">Manage Transactions</a>
         </h2>
     </x-slot>
 
