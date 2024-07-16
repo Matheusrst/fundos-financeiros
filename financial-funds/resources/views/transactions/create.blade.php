@@ -46,9 +46,15 @@
                             <!-- Asset -->
                             <div>
                                 <x-label for="asset_id" :value="__('Asset')" />
-                                <select name="asset_id" id="asset_id" class="block mt-1 w-full">
+                                <select name="asset_id" id="asset_id" class="block mt-1 w-full" onchange="updatePrice()">
                                     <!-- Options will be populated by JavaScript -->
                                 </select>
+                            </div>
+
+                            <!-- Price -->
+                            <div>
+                                <x-label for="price" :value="__('Price')" />
+                                <x-input id="price" class="block mt-1 w-full" type="text" name="price" readonly />
                             </div>
 
                             <!-- Quantity -->
@@ -71,7 +77,7 @@
     </div>
 
     <script>
-        // JavaScript to dynamically update the asset dropdown
+        // JavaScript to dynamically update the asset dropdown and price
         const stocks = @json($stocks);
         const funds = @json($funds);
 
@@ -96,9 +102,33 @@
                 option.textContent = asset.name;
                 assetSelect.appendChild(option);
             });
+
+            // Update the price field based on the selected asset
+            updatePrice();
         }
 
-        // Initialize the asset dropdown on page load
+        function updatePrice() {
+            const assetType = document.getElementById('asset_type').value;
+            const assetId = document.getElementById('asset_id').value;
+            let assets = [];
+
+            if (assetType === 'stock') {
+                assets = stocks;
+            } else if (assetType === 'fund') {
+                assets = funds;
+            }
+
+            const selectedAsset = assets.find(asset => asset.id == assetId);
+
+            // Update the price field
+            if (selectedAsset) {
+                document.getElementById('price').value = selectedAsset.price;
+            } else {
+                document.getElementById('price').value = '';
+            }
+        }
+
+        // Initialize the asset dropdown and price field on page load
         document.addEventListener('DOMContentLoaded', function () {
             updateAssets();
         });
