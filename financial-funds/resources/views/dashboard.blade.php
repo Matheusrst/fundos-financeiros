@@ -24,47 +24,72 @@
         </div>
     </div>
 
-    <script>
-        var stockCtx = document.getElementById('stockChart').getContext('2d');
-        var stockChart = new Chart(stockCtx, {
-            type: 'line',
-            data: {
-                labels: @json($stockLabels),
-                datasets: [{
-                    label: 'Stock Prices',
-                    data: @json($stockData),
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+    <!-- Ensure Chart.js is loaded -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Ensure Echo is loaded -->
+    <script src="{{ mix('js/app.js') }}"></script>
 
-        var fundCtx = document.getElementById('fundChart').getContext('2d');
-        var fundChart = new Chart(fundCtx, {
-            type: 'line',
-            data: {
-                labels: @json($fundLabels),
-                datasets: [{
-                    label: 'Fund Prices',
-                    data: @json($fundData),
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const stockCtx = document.getElementById('stockChart').getContext('2d');
+            const fundCtx = document.getElementById('fundChart').getContext('2d');
+
+            const stockChart = new Chart(stockCtx, {
+                type: 'line',
+                data: {
+                    labels: @json($stockLabels),
+                    datasets: [{
+                        label: 'Stock Prices',
+                        data: @json($stockData),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
+            });
+
+            const fundChart = new Chart(fundCtx, {
+                type: 'line',
+                data: {
+                    labels: @json($fundLabels),
+                    datasets: [{
+                        label: 'Fund Prices',
+                        data: @json($fundData),
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            window.Echo.channel('asset-prices')
+                .listen('AssetPriceUpdated', (e) => {
+                    const assetType = e.asset_type;
+                    const price = e.price;
+                    const timestamp = new Date().toLocaleTimeString();
+
+                    if (assetType === 'stock') {
+                        stockChart.data.labels.push(timestamp);
+                        stockChart.data.datasets[0].data.push(price);
+                        stockChart.update();
+                    } else if (assetType === 'fund') {
+                        fundChart.data.labels.push(timestamp);
+                        fundChart.data.datasets[0].data.push(price);
+                        fundChart.update();
+                    }
+                });
         });
     </script>
 </x-app-layout>

@@ -7,57 +7,75 @@ use App\Models\Stock;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AssetPriceUpdated;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::with(['stock', 'fund'])->get();
+        $transactions = Transaction::where('user_id', Auth::id())->get();
+
+        $transactions->each(function ($transaction) {
+            if ($transaction->asset_type === 'stock') {
+                $asset = Stock::find($transaction->asset_id);
+                $transaction->asset_name = $asset ? $asset->name : 'Unknown';
+            } elseif ($transaction->asset_type === 'fund') {
+                $asset = Fund::find($transaction->asset_id);
+                $transaction->asset_name = $asset ? $asset->name : 'Unknown';
+            } else {
+                $transaction->asset_name = 'Unknown';
+            }
+        });
+
         return view('transactions.index', compact('transactions'));
     }
-
     public function create()
-{
+    {
     $stocks = Stock::all();
     $funds = Fund::all();
 
     return view('transactions.create', compact('stocks', 'funds'));
-}
+    }
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'type' => 'required|in:buy,sell',
-        'asset_type' => 'required|in:stock,fund',
-        'asset_id' => 'required|integer',
-        'quantity' => 'required|integer|min:1',
-    ]);
+    {
+        $request->validate([
+            'type' => 'required|string',
+            'asset_type' => 'required|string',
+            'asset_id' => 'required|integer',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-    if ($validated['asset_type'] === 'stock') {
-        $asset = Stock::find($validated['asset_id']);
-    } else {
-        $asset = Fund::find($validated['asset_id']);
+        $asset = null;
+
+        if ($request->asset_type === 'stock') {
+            $asset = Stock::findOrFail($request->asset_id);
+        } else if ($request->asset_type === 'fund') {
+            $asset = Fund::findOrFail($request->asset_id);
+        }
+
+        if ($request->type === 'buy') {
+            $asset->price += $request->quantity * 0.01; // Increment price by 1 cent per unit bought
+        } else if ($request->type === 'sell') {
+            $asset->price -= $request->quantity * 0.01; // Decrement price by 1 cent per unit sold
+        }
+
+        $asset->save();
+
+        // Dispatch event to update prices
+        broadcast(new AssetPriceUpdated($asset));
+
+        Transaction::create([
+            'type' => $request->type,
+            'asset_type' => $request->asset_type,
+            'asset_id' => $request->asset_id,
+            'quantity' => $request->quantity,
+            'price' => $asset->price,
+            'user_id' => Auth::id(), // Set the user_id to the currently authenticated user
+        ]);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaction completed successfully.');
     }
-
-    if (!$asset) {
-        return redirect()->back()->withErrors(['asset_id' => 'Invalid asset selected.']);
-    }
-
-    $transaction = new Transaction();
-    $transaction->type = $validated['type'];
-    $transaction->quantity = $validated['quantity'];
-    $transaction->user_id = auth()->id();
-
-    if ($validated['asset_type'] === 'stock') {
-        $transaction->stock_id = $asset->id;
-    } else {
-        $transaction->fund_id = $asset->id;
-    }
-
-    $transaction->save();
-
-    return redirect()->route('transactions.index')->with('success', 'Transaction completed successfully.');
-}
 
     public function buy(Request $request)
     {

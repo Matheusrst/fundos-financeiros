@@ -10,18 +10,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('stock_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('fund_id')->nullable()->constrained()->onDelete('cascade');
-            $table->enum('type', ['buy', 'sell']);
-            $table->integer('quantity');
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('transactions', function (Blueprint $table) {
+        $table->id();
+        $table->string('type');
+        $table->string('asset_type');
+        $table->foreignId('asset_id');
+        $table->integer('quantity');
+        $table->decimal('price', 8, 2);
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

@@ -10,11 +10,12 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'stock_id',
-        'fund_id',
         'type',
+        'asset_type',
+        'asset_id',
         'quantity',
+        'price',
+        'user_id'
     ];
 
     public function user()
@@ -30,5 +31,15 @@ class Transaction extends Model
     public function fund()
     {
         return $this->belongsTo(Fund::class);
+    }
+
+    public function asset()
+    {
+        if ($this->asset_type === 'stock') {
+            return $this->stock();
+        } elseif ($this->asset_type === 'fund') {
+            return $this->fund();
+        }
+        return null;
     }
 }
