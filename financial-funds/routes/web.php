@@ -5,6 +5,7 @@ use App\http\Controllers\FundController;
 use App\http\Controllers\StockController;
 use App\http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GraphController;
 use App\Http\Controllers\WalletController;
 
 Route::get('/', function () {
@@ -20,6 +21,9 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/graphs', [GraphController::class, 'index'])->name('graphs.index');
+Route::get('/graphs/{type}/{id}', [GraphController::class, 'show'])->name('graphs.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
