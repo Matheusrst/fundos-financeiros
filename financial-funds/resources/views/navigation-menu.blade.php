@@ -15,6 +15,18 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('stocks.index')" :active="request()->routeIs('stocks.index')">
+                        {{ __('Stocks') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('funds.index')" :active="request()->routeIs('funds.index')">
+                        {{ __('Funds') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.index')">
+                        {{ __('Transaction History') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('transactions.create')" :active="request()->routeIs('transactions.create')">
+                        {{ __('Manage Transactions') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -70,6 +82,18 @@
                         </x-dropdown>
                     </div>
                 @endif
+
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <!-- Wallet Balance -->
+                @auth
+                    @php
+                        $wallet = Auth::user()->wallet;
+                        $balance = $wallet ? number_format($wallet->balance, 2) : '0.00';
+                    @endphp
+                    <div class="mr-4 text-gray-600">
+                        <span>{{ __('Balance') }}: ${{ $balance }}</span>
+                    </div>
+                @endauth
 
                 <!-- Settings Dropdown -->
                 <div class="ms-3 relative">
@@ -145,6 +169,18 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('stocks.index')" :active="request()->routeIs('stocks.index')">
+                {{ __('Stocks') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('funds.index')" :active="request()->routeIs('funds.index')">
+                {{ __('Funds') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.index')">
+                {{ __('Transaction History') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('transactions.create')" :active="request()->routeIs('transactions.create')">
+                {{ __('Manage Transactions') }}
             </x-responsive-nav-link>
         </div>
 
