@@ -39,4 +39,6 @@ Route::middleware(['auth'])->group(function () {
 
     //rotas da carteira
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::get('/wallet/add-balance', [WalletController::class, 'showAddBalanceForm'])->name('wallet.showAddBalanceForm');
+    Route::post('/wallet/add-balance', [WalletController::class, 'addBalance'])->name('wallet.addBalance');
 });
