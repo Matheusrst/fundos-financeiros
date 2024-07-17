@@ -33,6 +33,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Rotas para fundos
     Route::resource('funds', FundController::class);
+    Route::resource('funds', FundController::class);
+    Route::get('/funds/{id}/create-prices', [FundController::class, 'createPrices'])->name('funds.create-prices');
+    Route::post('/funds/add-prices', [FundController::class, 'addPrices'])->name('funds.add-prices');
+    Route::get('/funds/{id}', [FundController::class, 'show'])->name('funds.show');
+
 
     // Rotas para transações
     Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
