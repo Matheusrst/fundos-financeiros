@@ -93,9 +93,10 @@
                         $wallet = Auth::user()->wallet;
                         $balance = $wallet ? number_format($wallet->balance, 2) : '0.00';
                     @endphp
-                    <div class="mr-4 text-gray-600">
-                        <span>{{ __('Balance') }}: ${{ $balance }}</span>
-                    </div>
+                    <x-dropdown-link :href="route('wallet.index')">
+                            {{ __('Wallet') }} {{ $balance }}
+                    </x-dropdown-link>
+                    
                 @endauth
 
                 <!-- Settings Dropdown -->
