@@ -33,7 +33,7 @@ class StockController extends Controller
         ]);
 
         // Redirect to the add-prices form with the created stock ID
-        return redirect()->route('stocks.add-prices-form', ['stock' => $stock->id])
+        return redirect()->route('stocks.index', ['stock' => $stock->id])
                          ->with('success', 'Stock created successfully. You can now add price history.');
     }
 
