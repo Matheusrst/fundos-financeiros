@@ -41,6 +41,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <a href="{{ route('funds.show', $fund->id) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
                                         <a href="{{ route('funds.edit', $fund->id) }}" class="text-indigo-600 hover:text-indigo-900 ml-4">Edit</a>
+                                        <a href="{{ route('funds.add-prices-form', $fund->id) }}" class="text-green-600 hover:text-green-900 ml-4">Add Prices</a>
                                         <form action="{{ route('funds.destroy', $fund->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
