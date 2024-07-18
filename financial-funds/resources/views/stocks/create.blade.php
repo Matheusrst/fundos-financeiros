@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add Prices for Stock') }}
+            {{ __('Create Stock') }}
         </h2>
     </x-slot>
 
@@ -9,43 +9,23 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form method="POST" action="{{ route('stocks.add-prices') }}">
+                    <form action="{{ route('stocks.store') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="stock_id" value="{{ $stock->id }}">
 
-                        <div id="prices-container">
-                            <div class="price-item">
-                                <label for="date">Date:</label>
-                                <input type="date" name="prices[0][date]" required>
-
-                                <label for="price">Price:</label>
-                                <input type="text" name="prices[0][price]" required>
-                            </div>
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700">Name</label>
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" class="mt-1 block w-full" required>
                         </div>
 
-                        <button type="button" id="add-price" class="mt-2 bg-blue-500 text-white px-4 py-2">Add More Prices</button>
-                        <button type="submit" class="mt-2 bg-green-500 text-white px-4 py-2">Submit</button>
+                        <div class="mb-4">
+                            <label for="initial_price" class="block text-gray-700">Initial Price</label>
+                            <input type="number" step="0.01" name="initial_price" id="initial_price" value="{{ old('initial_price') }}" class="mt-1 block w-full" required>
+                        </div>
+
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create Stock</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('add-price').addEventListener('click', function () {
-            var container = document.getElementById('prices-container');
-            var index = container.getElementsByClassName('price-item').length;
-
-            var newItem = document.createElement('div');
-            newItem.classList.add('price-item');
-            newItem.innerHTML = `
-                <label for="date">Date:</label>
-                <input type="date" name="prices[${index}][date]" required>
-
-                <label for="price">Price:</label>
-                <input type="text" name="prices[${index}][price]" required>
-            `;
-            container.appendChild(newItem);
-        });
-    </script>
 </x-app-layout>
