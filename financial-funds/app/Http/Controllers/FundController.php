@@ -22,9 +22,14 @@ class FundController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required', 'price' => 'required']);
-        Fund::create($request->all());
-        return redirect()->route('funds.index');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        $fund = Fund::create($validatedData);
+
+        return redirect()->route('funds.show', $fund);
     }
 
     public function show($id)
@@ -113,21 +118,13 @@ class FundController extends Controller
                          ->with('success', 'Prices added successfully.');
     }
 
-    public function storePrices(Request $request, $fund)
+    public function storePrices(Request $request, Fund $fund)
     {
-    $request->validate([
-        'date' => 'required|date',
-        'price' => 'required|numeric|min:0',
-    ]);
+        foreach ($request->input('prices', []) as $priceData) {
+            $fund->priceHistories()->create($priceData);
+        }
 
-    $fund = Fund::findOrFail($fund);
-
-    $fund->priceHistories()->create([
-        'date' => $request->date,
-        'price' => $request->price,
-    ]);
-
-    return redirect()->route('funds.show', $fund)->with('success', 'Price added successfully.');
+        return redirect()->route('funds.show', $fund);
     }
 
     public function destroy(Fund $fund)

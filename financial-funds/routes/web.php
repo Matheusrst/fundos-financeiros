@@ -44,8 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('funds', FundController::class);
     Route::resource('funds', FundController::class);
     Route::get('/funds/{id}/create-prices', [FundController::class, 'createPrices'])->name('funds.create-prices');
-    Route::post('/funds/add-prices', [FundController::class, 'addPrices'])->name('funds.add-prices');
+    Route::resource('funds', FundController::class);
     Route::get('funds/{fund}/add-prices', [FundController::class, 'addPricesForm'])->name('funds.add-prices-form');
+    Route::post('funds/{fund}/add-prices', [FundController::class, 'storePrices'])->name('funds.add-prices');
     Route::post('funds/{fund}/store-prices', [FundController::class, 'storePrices'])->name('funds.store-prices');
     Route::get('/funds/{id}', [FundController::class, 'show'])->name('funds.show');
 

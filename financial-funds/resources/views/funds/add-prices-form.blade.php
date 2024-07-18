@@ -1,5 +1,3 @@
-<!-- resources/views/funds/add-prices-form.blade.php -->
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -11,23 +9,66 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <form action="{{ route('funds.store-prices', $fund) }}" method="POST">
+                    <form action="{{ route('funds.store-prices', ['fund' => $fund->id]) }}" method="POST">
                         @csrf
 
                         <div class="mb-4">
-                            <label for="date" class="block text-gray-700">Date</label>
-                            <input type="date" name="date" id="date" class="mt-1 block w-full" required>
+                            <label for="prices" class="block text-gray-700">Prices</label>
+                            <div id="prices">
+                                <div class="price-entry mb-4 p-4 border rounded">
+                                    <div class="flex items-center mb-2">
+                                        <label for="price_0" class="block text-gray-600 mr-2">Price</label>
+                                        <input type="number" step="0.01" name="prices[0][price]" id="price_0" class="block w-full" required>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <label for="date_0" class="block text-gray-600 mr-2">Date</label>
+                                        <input type="date" name="prices[0][date]" id="date_0" class="block w-full" required>
+                                    </div>
+                                    <button type="button" class="remove-price-entry mt-2 text-red-500" data-index="0">Remove</button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-price-entry" class="bg-blue-500 text-white px-4 py-2 rounded">Add Price Entry</button>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="price" class="block text-gray-700">Price</label>
-                            <input type="number" step="0.01" name="price" id="price" class="mt-1 block w-full" required>
-                        </div>
-
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Price</button>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Prices</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pricesContainer = document.getElementById('prices');
+            const addButton = document.getElementById('add-price-entry');
+
+            let index = 1;
+
+            addButton.addEventListener('click', function() {
+                const newPriceEntry = document.createElement('div');
+                newPriceEntry.classList.add('price-entry', 'mb-4', 'p-4', 'border', 'rounded');
+                newPriceEntry.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <label for="price_${index}" class="block text-gray-600 mr-2">Price</label>
+                        <input type="number" step="0.01" name="prices[${index}][price]" id="price_${index}" class="block w-full" required>
+                    </div>
+                    <div class="flex items-center">
+                        <label for="date_${index}" class="block text-gray-600 mr-2">Date</label>
+                        <input type="date" name="prices[${index}][date]" id="date_${index}" class="block w-full" required>
+                    </div>
+                    <button type="button" class="remove-price-entry mt-2 text-red-500" data-index="${index}">Remove</button>
+                `;
+                pricesContainer.appendChild(newPriceEntry);
+                index++;
+            });
+
+            pricesContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('remove-price-entry')) {
+                    const indexToRemove = event.target.dataset.index;
+                    const entryToRemove = document.querySelector(`#price_${indexToRemove}`).parentElement.parentElement;
+                    entryToRemove.remove();
+                }
+            });
+        });
+    </script>
 </x-app-layout>
