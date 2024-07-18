@@ -88,8 +88,8 @@ class FundController extends Controller
 
     public function addPricesForm($fund)
     {
-        $fund = Fund::findOrFail($fund);
-        return view('funds.add-prices-form', compact('fund'));
+    $fund = Fund::findOrFail($fund);
+    return view('funds.add-prices-form', compact('fund'));
     }
 
     public function addPrices(Request $request)
@@ -115,19 +115,19 @@ class FundController extends Controller
 
     public function storePrices(Request $request, $fund)
     {
-        $request->validate([
-            'date' => 'required|date',
-            'prices' => 'required|numeric|min:0',
-        ]);
+    $request->validate([
+        'date' => 'required|date',
+        'price' => 'required|numeric|min:0',
+    ]);
 
-        $fund = Fund::findOrFail($fund);
+    $fund = Fund::findOrFail($fund);
 
-        $fund->priceHistories()->create([
-            'date' => $request->date,
-            'price' => $request->prices,
-        ]);
+    $fund->priceHistories()->create([
+        'date' => $request->date,
+        'price' => $request->price,
+    ]);
 
-        return redirect()->route('funds.show', $fund)->with('success', 'Price added successfully');
+    return redirect()->route('funds.show', $fund)->with('success', 'Price added successfully.');
     }
 
     public function destroy(Fund $fund)
