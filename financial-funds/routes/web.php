@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Rotas para ações
     Route::resource('stocks', StockController::class);
+    Route::post('stocks/{stock}/add-prices', [StockController::class, 'addPrices'])->name('stocks.add-prices');
 
     // Rotas para fundos
     Route::resource('funds', FundController::class);

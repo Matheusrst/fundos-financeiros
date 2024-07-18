@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('price_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stock_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('fund_id')->nullable()->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('priceable_id');
+            $table->string('priceable_type');
+            $table->decimal('price', 8, 2);
             $table->date('date');
-            $table->decimal('price', 10, 2);
             $table->timestamps();
+            
+            $table->index(['priceable_id', 'priceable_type']);
         });
     }
 

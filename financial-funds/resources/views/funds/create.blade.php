@@ -22,11 +22,6 @@
                             <input type="number" id="price" name="price" step="0.01" class="form-input mt-1 block w-full" required>
                         </div>
 
-                        <div class="mb-4">
-                            <label for="available_quantity" class="block text-sm font-medium text-gray-700">Available Quantity</label>
-                            <input type="number" id="available_quantity" name="available_quantity" class="form-input mt-1 block w-full" min="0" value="0" required>
-                        </div>
-
                         <div class="flex items-center justify-end">
                             <x-button>Submit</x-button>
                         </div>

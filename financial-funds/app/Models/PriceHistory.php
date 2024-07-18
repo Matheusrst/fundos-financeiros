@@ -14,6 +14,8 @@ class PriceHistory extends Model
         'fund_id',
         'date',
         'price',
+        'priceable_type',
+        'priceable_id',
     ];
 
     protected $dates = [
@@ -28,5 +30,10 @@ class PriceHistory extends Model
     public function fund()
     {
         return $this->belongsTo(Fund::class);
+    }
+
+    public function priceable()
+    {
+        return $this->morphTo();
     }
 }

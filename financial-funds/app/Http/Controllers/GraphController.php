@@ -10,8 +10,8 @@ class GraphController extends Controller
 {
     public function index()
     {
-        $stocks = Stock::with('priceHistories')->get();
-        $funds = Fund::with('priceHistories')->get();
+        $stocks = Stock::with('pricehistories')->get();
+        $funds = Fund::with('pricehistories')->get();
 
         return view('graphs.index', [
             'stocks' => $stocks,

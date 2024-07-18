@@ -13,7 +13,6 @@ class Fund extends Model
     protected $fillable = [
         'name',
         'price',
-        'available_quantity'
     ];
 
     public function transaction()
@@ -21,8 +20,8 @@ class Fund extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function priceHistories(): HasMany
+    public function priceHistories()
     {
-        return $this->hasMany(PriceHistory::class);
+        return $this->morphMany(PriceHistory::class, 'priceable');
     }
 }

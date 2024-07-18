@@ -36,36 +36,61 @@ class StockController extends Controller
     return view('stocks.show', compact('stock', 'labels', 'prices'));
 }
 
-    public function edit(Stock $stock)
+    public function edit($id)
     {
-        return view('stocks.edit', compact('stock'));
+        $stock = Stock::findOrFail($id);
+        $priceHistories = $stock->priceHistories;
+
+        return view('stocks.edit', compact('stock', 'priceHistories'));
     }
 
-    public function update(Request $request, Stock $stock)
-    {
-        $request->validate(['name' => 'required', 'price' => 'required']);
-        $stock->update($request->all());
-        return redirect()->route('stocks.index');
-    }
 
-    public function addPrices(Request $request)
+    public function update(Request $request, $id)
     {
-        $request->validate9([
-            'stock_id' => 'required|exists:stocks,id',
-            'prices' => 'required|array',
-            'prices.*.date' => 'required|date',
-            'prices.*.price' => 'required|numeric',
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'priceHistories' => 'required|array',
+        'priceHistories.*.price' => 'required|numeric',
+        'priceHistories.*.date' => 'required|date',
+    ]);
+
+    $stock = Stock::findOrFail($id);
+    $stock->update(['name' => $request->name]);
+
+    $stock->priceHistories()->delete();
+
+    foreach ($request->priceHistories as $priceData) {
+        PriceHistory::create([
+            'priceable_id' => $stock->id,
+            'priceable_type' => Stock::class,
+            'price' => $priceData['price'],
+            'date' => $priceData['date'],
         ]);
+    }
+
+    return redirect()->route('stocks.index')->with('success', 'Stock updated successfully.');
+    }
+
+    public function addPrices(Request $request, $id)
+    {
+        $request->validate([
+            'prices' => 'required|array',
+            'prices.*.price' => 'required|numeric',
+            'prices.*.date' => 'required|date',
+        ]);
+
+        $stock = Stock::findOrFail($id);
 
         foreach ($request->prices as $priceData) {
             PriceHistory::create([
-                'stock_id' => $request->stock_id,
-                'date' => $priceData['date'],
+                'priceable_id' => $stock->id,
+                'priceable_type' => Stock::class,
                 'price' => $priceData['price'],
+                'date' => $priceData['date'],
             ]);
         }
 
-        return redirect()->route('stocks.index')->with('success', 'Prices added successfully');
+        return redirect()->route('stocks.show', $stock->id)->with('success', 'Prices added successfully.');
     }
 
     public function destroy(Stock $stock)
