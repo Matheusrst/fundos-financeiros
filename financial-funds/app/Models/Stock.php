@@ -15,6 +15,25 @@ class Stock extends Model
         'price',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($stock) {
+            $stock->priceHistories()->create([
+                'price' => $stock->price,
+                'date' => now()
+            ]);
+        });
+
+        static::updated(function ($stock) {
+            $stock->priceHistories()->create([
+                'price' => $stock->price,
+                'date' => now()
+            ]);
+        });
+    }
+
     public function transaction()
     {
         return $this->hasMany(transaction::class);

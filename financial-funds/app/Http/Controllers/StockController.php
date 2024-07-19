@@ -22,19 +22,14 @@ class StockController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'initial_price' => 'required|numeric|min:0',
+            'price' => 'required|numeric',
         ]);
 
-        $stock = Stock::create([
-            'name' => $request->name,
-            'price' => $request->initial_price,
-        ]);
+        $stock = Stock::create($validatedData);
 
-        // Redirect to the add-prices form with the created stock ID
-        return redirect()->route('stocks.index', ['stock' => $stock->id])
-                         ->with('success', 'Stock created successfully. You can now add price history.');
+        return redirect()->route('stocks.show', $stock);
     }
 
     public function show($id)
@@ -125,6 +120,15 @@ class StockController extends Controller
     }
 
     return redirect()->route('stocks.show', $stock->id)->with('success', 'Prices added successfully.');
+    }
+
+    public function storePrices(Request $request, Stock $stock)
+    {
+        foreach ($request->input('prices', []) as $priceData) {
+            $stock->priceHistories()->create($priceData);
+        }
+
+        return redirect()->route('stocks.show', $stock);
     }
 
     public function destroy(Stock $stock)

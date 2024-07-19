@@ -34,20 +34,20 @@ class FundController extends Controller
 
     public function show($id)
     {
-    $fund = Fund::findOrFail($id);
-    $priceHistories = $fund->priceHistories()->orderBy('date')->get();
+        $fund = Fund::findOrFail($id);
+        $priceHistories = $fund->priceHistories()->orderBy('date')->get();
 
-    $initialPrice = $priceHistories->first()->price ?? 0;
+        $initialPrice = $priceHistories->first()->price ?? 0;
 
-    $labels = $priceHistories->map(function($history) {
-        return \Carbon\Carbon::parse($history->date)->format('Y-m-d\TH:i:s\Z');
-    })->toArray();
+        $labels = $priceHistories->map(function($history) {
+          return \Carbon\Carbon::parse($history->date)->format('Y-m-d\TH:i:s\Z');
+        })->toArray();
 
-    $prices = $priceHistories->map(function($history) {
-        return $history->price;
-    })->toArray();
+        $prices = $priceHistories->map(function($history) {
+            return $history->price;
+        })->toArray();
 
-    return view('funds.show', compact('fund', 'labels', 'prices', 'initialPrice'));
+        return view('funds.show', compact('fund', 'labels', 'prices', 'initialPrice'));
     }
 
     public function edit(Fund $fund)

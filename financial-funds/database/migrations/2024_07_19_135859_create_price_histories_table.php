@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('price_histories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('priceable_id');
-            $table->string('priceable_type');
+            $table->morphs('priceable'); // priceable_id e priceable_type
             $table->decimal('price', 8, 2);
             $table->date('date');
             $table->timestamps();
-            
-            $table->index(['priceable_id', 'priceable_type']);
         });
     }
 

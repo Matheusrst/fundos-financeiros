@@ -18,8 +18,8 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="initial_price" class="block text-gray-700">Initial Price</label>
-                            <input type="number" step="0.01" name="initial_price" id="initial_price" value="{{ old('initial_price') }}" class="mt-1 block w-full" required>
+                            <label for="price" class="block text-gray-700">Price</label>
+                            <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" class="mt-1 block w-full" required>
                         </div>
 
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create Stock</button>

@@ -29,12 +29,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Rotas para ações
+    Route::resource('stocks', StockController::class);
     Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
     Route::get('stocks/create', [StockController::class, 'create'])->name('stocks.create');
     Route::post('stocks', [StockController::class, 'store'])->name('stocks.store');
     Route::get('stocks/{stock}/edit', [StockController::class, 'edit'])->name('stocks.edit');
     Route::put('stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
     Route::get('stocks/{stock}/add-prices', [StockController::class, 'addPricesForm'])->name('stocks.add-prices-form');
+    Route::post('stocks/{stock}/add-prices', [StockController::class, 'storePrices'])->name('stocks.store-prices');
     Route::post('stocks/{stock}/add-prices', [StockController::class, 'addPrices'])->name('stocks.add-prices');
     Route::delete('stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
     Route::get('stocks/{stock}', [StockController::class, 'show'])->name('stocks.show');

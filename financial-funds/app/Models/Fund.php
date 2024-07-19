@@ -15,6 +15,25 @@ class Fund extends Model
         'price',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($fund) {
+            $fund->priceHistories()->create([
+                'price' => $fund->price,
+                'date' => now()
+            ]);
+        });
+
+        static::updated(function ($fund) {
+            $fund->priceHistories()->create([
+                'price' => $fund->price,
+                'date' => now()
+            ]);
+        });
+    }
+
     public function transaction()
     {
         return $this->hasMany(Transaction::class);
