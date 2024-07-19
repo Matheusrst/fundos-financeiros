@@ -99,4 +99,4 @@ Se você deseja contribuir com o projeto, siga os seguintes passos:
 
 ## Licença
 
-Este projeto é licenciado sob a [MIT License](LICENSE).
+Este é um projeto open source de codigo e licença aberta sem nehuma finalidade de uso proficional ou industrial.
