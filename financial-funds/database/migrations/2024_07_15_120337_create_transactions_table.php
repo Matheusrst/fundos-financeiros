@@ -8,7 +8,9 @@ use PHPUnit\Framework\Constraint\Constraint;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Cria a tabela 'transactions' com os campos necessários.
+     *
+     * @return void
      */
     public function up()
 {
@@ -25,7 +27,9 @@ return new class extends Migration
 }
 
     /**
-     * Reverse the migrations.
+     * Reverte a criação da tabela 'transactions'.
+     *
+     * @return void
      */
     public function down(): void
     {

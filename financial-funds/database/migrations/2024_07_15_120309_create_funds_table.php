@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Cria a tabela 'funds' com os campos necessários.
+     *
+     * @return void
      */
     public function up(): void
     {
@@ -21,7 +23,9 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Reverte a criação da tabela 'funds'.
+     *
+     * @return void
      */
     public function down(): void
     {

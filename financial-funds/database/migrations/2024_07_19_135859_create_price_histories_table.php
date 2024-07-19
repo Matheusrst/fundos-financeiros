@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Cria a tabela 'price_histories' para armazenar os históricos de preços.
+     *
+     * @return void
      */
     public function up(): void
     {
@@ -21,7 +23,9 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Reverte a criação da tabela 'price_histories'.
+     *
+     * @return void
      */
     public function down(): void
     {

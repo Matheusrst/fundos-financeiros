@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Cria a tabela de sessões.
+     *
+     * @return void
      */
     public function up(): void
     {
@@ -21,8 +23,10 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
+     /**
+     * Reverte a criação da tabela de sessões.
+     *
+     * @return void
      */
     public function down(): void
     {
