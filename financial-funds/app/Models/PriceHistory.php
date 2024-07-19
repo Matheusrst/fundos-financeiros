@@ -9,6 +9,7 @@ class PriceHistory extends Model
 {
     use HasFactory;
 
+    // Atributos que podem ser preenchidos em massa
     protected $fillable = [
         'stock_id',
         'fund_id',
@@ -18,20 +19,24 @@ class PriceHistory extends Model
         'priceable_id',
     ];
 
+    // Atributos que devem ser tratados como instâncias de Carbon (data/hora)
     protected $dates = [
         'date'
     ];
 
+    // Relacionamento com o modelo Stock (muitos para um)
     public function stock()
     {
         return $this->belongsTo(Stock::class);
     }
 
+    // Relacionamento com o modelo Fund (muitos para um)
     public function fund()
     {
         return $this->belongsTo(Fund::class);
     }
 
+    // Relacionamento polimórfico com outros modelos (Stock, Fund, etc.)
     public function priceable()
     {
         return $this->morphTo();
