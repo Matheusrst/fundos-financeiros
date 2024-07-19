@@ -100,3 +100,11 @@ Se você deseja contribuir com o projeto, siga os seguintes passos:
 ## Licença
 
 Este é um projeto open source de codigo e licença aberta sem nehuma finalidade de uso proficional ou industrial.
+
+## Contato
+
+Para mais informações, entre em contato:
+
+- **Nome**: Matheus Ribeiro De Sales Tiné
+- **E-mail**: matheusriberomatheus@gmail.com
+- **GitHub**: [Matheusrst](https://github.com/Matheusrst)
