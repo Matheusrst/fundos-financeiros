@@ -1,16 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <!-- Cabeçalho da página com o título principal -->
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Manage Transactions') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
+        <!-- Container principal com espaçamento e largura máxima -->
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Seção de conteúdo com fundo branco e sombra -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
-                    <!-- Display validation errors -->
+                    <!-- Exibição de erros de validação -->
                     @if ($errors->any())
                         <div class="mb-4">
                             <ul class="list-disc list-inside text-sm text-red-600">
@@ -21,11 +24,12 @@
                         </div>
                     @endif
 
+                    <!-- Formulário para criar uma nova transação -->
                     <form method="POST" action="{{ route('transactions.store') }}">
                         @csrf
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Transaction Type -->
+                            <!-- Tipo de Transação -->
                             <div>
                                 <x-label for="type" :value="__('Transaction Type')" />
                                 <select name="type" id="type" class="block mt-1 w-full">
@@ -34,7 +38,7 @@
                                 </select>
                             </div>
 
-                            <!-- Asset Type -->
+                            <!-- Tipo de Ativo -->
                             <div>
                                 <x-label for="asset_type" :value="__('Asset Type')" />
                                 <select name="asset_type" id="asset_type" class="block mt-1 w-full" onchange="updateAssets()">
@@ -43,21 +47,21 @@
                                 </select>
                             </div>
 
-                            <!-- Asset -->
+                            <!-- Ativo -->
                             <div>
                                 <x-label for="asset_id" :value="__('Asset')" />
                                 <select name="asset_id" id="asset_id" class="block mt-1 w-full" onchange="updatePrice()">
-                                    <!-- Options will be populated by JavaScript -->
+                                    <!-- Opções serão preenchidas pelo JavaScript -->
                                 </select>
                             </div>
 
-                            <!-- Price -->
+                            <!-- Preço -->
                             <div>
                                 <x-label for="price" :value="__('Price')" />
                                 <x-input id="price" class="block mt-1 w-full" type="text" name="price" readonly />
                             </div>
 
-                            <!-- Quantity -->
+                            <!-- Quantidade -->
                             <div>
                                 <x-label for="quantity" :value="__('Quantity')" />
                                 <x-input id="quantity" class="block mt-1 w-full" type="number" name="quantity" :value="old('quantity')" required />
@@ -77,7 +81,7 @@
     </div>
 
     <script>
-        // JavaScript to dynamically update the asset dropdown and price
+        // JavaScript para atualizar dinamicamente a lista de ativos e o preço
         const stocks = @json($stocks);
         const funds = @json($funds);
 
@@ -85,10 +89,10 @@
             const assetType = document.getElementById('asset_type').value;
             const assetSelect = document.getElementById('asset_id');
 
-            // Clear the current options
+            // Limpa as opções atuais
             assetSelect.innerHTML = '';
 
-            // Populate the options based on the selected asset type
+            // Preenche as opções com base no tipo de ativo selecionado
             let assets = [];
             if (assetType === 'stock') {
                 assets = stocks;
@@ -103,7 +107,7 @@
                 assetSelect.appendChild(option);
             });
 
-            // Update the price field based on the selected asset
+            // Atualiza o campo de preço com base no ativo selecionado
             updatePrice();
         }
 
@@ -120,7 +124,7 @@
 
             const selectedAsset = assets.find(asset => asset.id == assetId);
 
-            // Update the price field
+            // Atualiza o campo de preço
             if (selectedAsset) {
                 document.getElementById('price').value = selectedAsset.price;
             } else {
@@ -128,7 +132,7 @@
             }
         }
 
-        // Initialize the asset dropdown and price field on page load
+        // Inicializa a lista de ativos e o campo de preço ao carregar a página
         document.addEventListener('DOMContentLoaded', function () {
             updateAssets();
         });
