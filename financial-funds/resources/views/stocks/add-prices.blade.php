@@ -13,7 +13,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Formulário para adicionar preços para uma ação -->
-                    <form action="{{ route('stocks.add-prices', ['stock' => $stock->id]) }}" method="POST">
+                    <form action="{{ route('stocks.add-prices-form', ['stock' => $stock->id]) }}" method="POST">
                         @csrf
 
                         <!-- Seção para inserir os preços -->

@@ -13,7 +13,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Formulário para adicionar preços ao fundo -->
-                    <form action="{{ route('funds.store-prices', ['fund' => $fund->id]) }}" method="POST">
+                    <form action="{{ route('funds.add-prices-form', ['fund' => $fund->id]) }}" method="POST">
                         @csrf
                         <!-- Campo de entrada para preços com data -->
                         <div class="mb-4">
