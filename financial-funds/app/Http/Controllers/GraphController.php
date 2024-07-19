@@ -8,6 +8,11 @@ use App\Models\Fund;
 
 class GraphController extends Controller
 {
+    /**
+     * Exibe a página inicial dos gráficos com dados de ações e fundos
+     *
+     * @return void
+     */
     public function index()
     {
         $stocks = Stock::with('pricehistories')->get();
@@ -19,8 +24,15 @@ class GraphController extends Controller
         ]);
     }
 
+    /**
+     * Exibe o gráfico para uma ação ou fundo específico
+     *
+     * @param [type] $type
+     * @param [type] $id
+     * @return void
+     */
     public function show($type, $id)
-{
+    {
     if ($type === 'stock') {
         $asset = Stock::findOrFail($id);
         $priceHistories = $asset->priceHistories()->orderBy('date')->get();
@@ -49,6 +61,6 @@ class GraphController extends Controller
         'prices' => $prices,
         'initialPrice' => $initialPrice
     ]);
-}
+    }
 
 }

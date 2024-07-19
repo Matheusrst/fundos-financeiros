@@ -9,17 +9,33 @@ use Carbon\Carbon;
 
 class FundController extends Controller
 {
+    /**
+     * Exibe uma lista de todos os fundoss
+     *
+     * @return void
+     */
     public function index()
     {
         $funds = Fund::all();
         return view('funds.index', compact('funds'));
     }
 
+    /**
+     * Exibe o formulário para criar um novo fundo
+     *
+     * @return void
+     */
     public function create()
     {
         return view('funds.create');
     }
 
+    /**
+     * Armazena um novo fundo no banco de dados
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -32,6 +48,12 @@ class FundController extends Controller
         return redirect()->route('funds.show', $fund);
     }
 
+    /**
+     * Exibe um fundo específico com seu histórico de preços
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function show($id)
     {
         $fund = Fund::findOrFail($id);
@@ -50,6 +72,12 @@ class FundController extends Controller
         return view('funds.show', compact('fund', 'labels', 'prices', 'initialPrice'));
     }
 
+    /**
+     * Exibe o formulário para editar um fundo existente
+     *
+     * @param Fund $fund
+     * @return void
+     */
     public function edit(Fund $fund)
     {
         $priceHistories = $fund->priceHistories->map(function($history) {
@@ -63,6 +91,13 @@ class FundController extends Controller
         ]);
     }
 
+    /**
+     * Atualiza um fundo existente no banco de dados
+     *
+     * @param Request $request
+     * @param Fund $fund
+     * @return void
+     */
     public function update(Request $request, Fund $fund)
     {
         $request->validate([
@@ -85,18 +120,36 @@ class FundController extends Controller
         return redirect()->route('funds.index')->with('success', 'Fund updated successfully.');
     }
 
+    /**
+     * Exibe o formulário para adicionar preços a um fundo existente
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function createPrices($id)
     {
         $fund = Fund::findOrFail($id);
         return view('funds.create', compact('fund'));
     }
 
+    /**
+     * Exibe o formulário para adicionar preços a um fundo específico
+     *
+     * @param [type] $fund
+     * @return void
+     */
     public function addPricesForm($fund)
     {
     $fund = Fund::findOrFail($fund);
     return view('funds.add-prices-form', compact('fund'));
     }
 
+    /**
+     * Armazena novos preços para um fundo específico
+     *
+     * @param Request $request
+     * @return void
+     */
     public function addPrices(Request $request)
     {
         $request->validate([
@@ -118,6 +171,13 @@ class FundController extends Controller
                          ->with('success', 'Prices added successfully.');
     }
 
+    /**
+     * Armazena novos preços para um fundo específico (função alternativa)
+     *
+     * @param Request $request
+     * @param Fund $fund
+     * @return void
+     */
     public function storePrices(Request $request, Fund $fund)
     {
         foreach ($request->input('prices', []) as $priceData) {
@@ -127,6 +187,12 @@ class FundController extends Controller
         return redirect()->route('funds.show', $fund);
     }
 
+    /**
+     * Remove um fundo do banco de dados
+     *
+     * @param Fund $fund
+     * @return void
+     */
     public function destroy(Fund $fund)
     {
         $fund->delete();

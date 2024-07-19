@@ -11,6 +11,11 @@ use App\Events\AssetPriceUpdated;
 
 class TransactionController extends Controller
 {
+    /**
+     * Exibe uma lista de transações do usuário autenticado
+     *
+     * @return void
+     */
     public function index()
     {
         $transactions = Transaction::where('user_id', Auth::id())->get();
@@ -29,6 +34,12 @@ class TransactionController extends Controller
 
         return view('transactions.index', compact('transactions'));
     }
+
+    /**
+     * Exibe o formulário para criar uma nova transação
+     *
+     * @return void
+     */
     public function create()
     {
     $stocks = Stock::all();
@@ -37,6 +48,12 @@ class TransactionController extends Controller
     return view('transactions.create', compact('stocks', 'funds'));
     }
 
+    /**
+     * Armazena uma nova transação no banco de dados
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -77,6 +94,12 @@ class TransactionController extends Controller
         return redirect()->route('transactions.index')->with('success', 'Transaction completed successfully.');
     }
 
+    /**
+     * Realiza a compra de uma ação ou fundo
+     *
+     * @param Request $request
+     * @return void
+     */
     public function buy(Request $request)
     {
         $request->validate([
@@ -126,6 +149,12 @@ class TransactionController extends Controller
        return redirect()->route('transactions.index')->with('success', 'Transaction completed successfully.');
     }
 
+    /**
+     * Realiza a venda de uma ação ou fundo
+     *
+     * @param Request $request
+     * @return void
+     */
     public function sell(Request $request)
     {
         $request->validate([

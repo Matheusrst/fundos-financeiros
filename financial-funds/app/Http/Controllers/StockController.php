@@ -11,15 +11,29 @@ class StockController extends Controller
 {
     public function index()
     {
+        /**
+         * Exibe uma lista paginada de todas as ações
+         */
         $stocks = Stock::paginate(10);
         return view('stocks.index', compact('stocks'));
     }
 
+    /**
+     * Exibe o formulário para criar uma nova ação
+     *
+     * @return void
+     */
     public function create()
     {
         return view('stocks.create');
     }
 
+    /**
+     * Armazena uma nova ação no banco de dados
+     *
+     * @param Request $request
+     * @return void
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -32,25 +46,27 @@ class StockController extends Controller
         return redirect()->route('stocks.show', $stock);
     }
 
+    /**
+     * Exibe uma ação específica com seu histórico de preços
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function show($id)
     {
     $stock = Stock::findOrFail($id);
 
-    // Obtenha os dados históricos de preços, se houver
     $priceHistories = $stock->priceHistories()->orderBy('date')->get();
 
-    // Inicialize os labels e preços com valores padrão
     $labels = [];
     $prices = [];
 
-    // Se houver históricos de preços, formate os dados
     if ($priceHistories->isNotEmpty()) {
         $labels = $priceHistories->pluck('date')->map(function($date) {
             return \Carbon\Carbon::parse($date)->format('d/m/Y');
         });
         $prices = $priceHistories->pluck('price');
     } else {
-        // Se não houver históricos de preços, use o preço atual do stock para o gráfico
         $labels = ['Current Price'];
         $prices = [$stock->price];
     }
@@ -58,6 +74,12 @@ class StockController extends Controller
     return view('stocks.show', compact('stock', 'labels', 'prices'));
     }
 
+    /**
+     * Exibe o formulário para editar uma ação existente
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function edit($id)
     {
         $stock = Stock::findOrFail($id);
@@ -66,7 +88,13 @@ class StockController extends Controller
         return view('stocks.edit', compact('stock', 'priceHistories'));
     }
 
-
+    /**
+     * Atualiza uma ação existente no banco de dados
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
     public function update(Request $request, $id)
     {
     $request->validate([
@@ -93,6 +121,12 @@ class StockController extends Controller
     return redirect()->route('stocks.index')->with('success', 'Stock updated successfully.');
     }
 
+    /**
+     * Exibe o formulário para adicionar preços a uma ação existente
+     *
+     * @param [type] $stockId
+     * @return void
+     */
     public function addPricesForm($stockId)
     {
         $stock = Stock::findOrFail($stockId);
@@ -100,6 +134,13 @@ class StockController extends Controller
         return view('stocks.add-prices', compact('stock'));
     }
 
+    /**
+     * Armazena novos preços para uma ação específica
+     *
+     * @param Request $request
+     * @param [type] $stockId
+     * @return void
+     */
     public function addPrices(Request $request, $stockId)
     {
     $request->validate([
@@ -122,6 +163,13 @@ class StockController extends Controller
     return redirect()->route('stocks.show', $stock->id)->with('success', 'Prices added successfully.');
     }
 
+    /**
+     * Armazena novos preços para uma ação específica (função alternativa)
+     *
+     * @param Request $request
+     * @param Stock $stock
+     * @return void
+     */
     public function storePrices(Request $request, Stock $stock)
     {
         foreach ($request->input('prices', []) as $priceData) {
@@ -131,6 +179,12 @@ class StockController extends Controller
         return redirect()->route('stocks.show', $stock);
     }
 
+    /**
+     * Remove uma ação do banco de dados
+     *
+     * @param Stock $stock
+     * @return void
+     */
     public function destroy(Stock $stock)
     {
         $stock->delete();

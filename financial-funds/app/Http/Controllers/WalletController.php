@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 
 class WalletController extends Controller
 {
+    /**
+     * Exibe o saldo da carteira do usuário autenticado
+     *
+     * @return void
+     */
     public function index()
     {
         $user = Auth::user();
@@ -19,11 +24,22 @@ class WalletController extends Controller
         return view('wallet.index', compact('wallet'));
     }
 
+    /**
+     * Exibe o formulário para adicionar saldo à carteira
+     *
+     * @return void
+     */
     public function showAddBalanceForm()
     {
         return view('wallet.add');
     }
 
+    /**
+     * Adiciona saldo à carteira do usuário autenticado
+     *
+     * @param Request $request
+     * @return void
+     */
     public function addBalance(Request $request)
     {
         $request->validate([
